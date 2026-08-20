@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "novabruteforce",
+  "version": "1.0.0",
+  "name": "Nova BruteForce",
+  "description": "BruteForce mod by Nova 7.9",
+  "authors": ["Nova 7.9"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/bruteforce/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "net.novabruteforce.BruteForceMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "minecraft": "1.21.4",
+    "fabric": "*"
+  }
+}
