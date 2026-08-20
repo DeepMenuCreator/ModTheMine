@@ -19,31 +19,24 @@ jobs:
           java-version: '21'
           distribution: 'microsoft'
 
-      - name: Create gradlew script
-        run: |
-          cat > gradlew << 'EOF'
-          #!/bin/sh
-          exec java -jar gradle-wrapper.jar "$@"
-          EOF
-          chmod +x gradlew
-
-      - name: Create gradle-wrapper.jar
+      - name: Setup Gradle Wrapper
         run: |
           mkdir -p gradle/wrapper
-          curl -L https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
-
-      - name: Create gradle-wrapper.properties
-        run: |
-          cat > gradle/wrapper/gradle-wrapper.properties << 'EOF'
-          distributionBase=GRADLE_USER_HOME
-          distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-8.5-bin.zip
-          zipStoreBase=GRADLE_USER_HOME
-          zipStorePath=wrapper/dists
-          EOF
+          cd gradle/wrapper
+          wget https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar
+          cd ../..
+          echo '#!/bin/sh' > gradlew
+          echo 'exec java -jar gradle/wrapper/gradle-wrapper.jar "$@"' >> gradlew
+          chmod +x gradlew
+          echo "distributionBase=GRADLE_USER_HOME" > gradle/wrapper/gradle-wrapper.properties
+          echo "distributionPath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
+          echo "distributionUrl=https://services.gradle.org/distributions/gradle-8.5-bin.zip" >> gradle/wrapper/gradle-wrapper.properties
+          echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties
+          echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: |
+          ./gradlew build --no-daemon
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
